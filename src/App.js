@@ -1,13 +1,14 @@
-import React, {useState, useEffect} from "react"
+import  {useState, useEffect} from "react"
 import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
-import { data } from "./data"
+// import { data } from "./data"
 import Split from "react-split"
 import {nanoid} from "nanoid"
 
 function App() {
 
-  const [notes, setNotes] = React.useState([])
+  const [notes, setNotes] = useState(
+    JSON.parse(localStorage.getItem("notes")) || [] )
   
   
   //Init as verry first note or empty string
@@ -16,8 +17,8 @@ function App() {
   )
  
   //When notes array changes uses side effect to save it in localStorage as a string 
- useEffect(()=>{
-    localStorage.setItem('notes', JSON.stringify(notes))
+  useEffect(() => {
+    localStorage.setItem("notes", JSON.stringify(notes))
   }, [notes])
 
   function createNewNote() {
