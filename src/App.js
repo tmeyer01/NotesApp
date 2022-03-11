@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState, useEffect} from "react"
 import Sidebar from "./components/Sidebar"
 import Editor from "./components/Editor"
 import { data } from "./data"
@@ -8,10 +8,18 @@ import {nanoid} from "nanoid"
 function App() {
 
   const [notes, setNotes] = React.useState([])
-  const [currentNoteId, setCurrentNoteId] = React.useState(
+  
+  
+  //Init as verry first note or empty string
+  const [currentNoteId, setCurrentNoteId] = useState(
       (notes[0] && notes[0].id) || ""
   )
-  
+ 
+  //When notes array changes uses side effect to save it in localStorage as a string 
+ useEffect(()=>{
+    localStorage.setItem('notes', JSON.stringify(notes))
+  }, [notes])
+
   function createNewNote() {
       const newNote = {
           id: nanoid(),
