@@ -8,7 +8,8 @@ import {nanoid} from "nanoid"
 function App() {
 
   const [notes, setNotes] = useState(
-    ()=> JSON.parse(localStorage.getItem("notes")) || [] )
+    ()=> JSON.parse(localStorage.getItem("notes")) || [] 
+  )
   
   
   //Init as verry first note or empty string
