@@ -1,113 +1,82 @@
-import  {useState, useEffect} from "react"
-import Sidebar from "./components/Sidebar"
-import Editor from "./components/Editor"
+import { useState, useEffect } from "react";
+import Sidebar from "./components/Sidebar";
+import Editor from "./components/Editor";
 // import { data } from "./data"
-import Split from "react-split"
-import {nanoid} from "nanoid"
+import Split from "react-split";
+import { nanoid } from "nanoid";
 
 function App() {
-
   const [notes, setNotes] = useState(
-    ()=> JSON.parse(localStorage.getItem("notes")) || [] 
-  )
-  
-  
+    () => JSON.parse(localStorage.getItem("notes")) || []
+  );
+
   //Init as verry first note or empty string
   const [currentNoteId, setCurrentNoteId] = useState(
-      (notes[0] && notes[0].id) || ""
-  )
- 
-  //When notes array changes uses side effect to save it in localStorage as a string 
+    (notes[0] && notes[0].id) || ""
+  );
+
+  //When notes array changes uses side effect to save it in localStorage as a string
   useEffect(() => {
-    localStorage.setItem("notes", JSON.stringify(notes))
-  }, [notes])
+    localStorage.setItem("notes", JSON.stringify(notes));
+  }, [notes]);
 
   function createNewNote() {
-      const newNote = {
-          id: nanoid(),
-          body: "# Type your markdown note's title here"
-      }
-      setNotes(prevNotes => [newNote, ...prevNotes])
-      setCurrentNoteId(newNote.id)
+    const newNote = {
+      id: nanoid(),
+      body: "# Type your markdown note's title here",
+    };
+    setNotes((prevNotes) => [newNote, ...prevNotes]);
+    setCurrentNoteId(newNote.id);
   }
-  
+
   function updateNote(text) {
-     //Want to change to rearrange so the most recently-modified 
-     //Is now at the top  
-    
-    setNotes(oldNotes =>  {
-          //create new array
-          //loop over orginal array 
-            //if id matches current 
-                //putt updated note at the beginning of the new array 
-                    //else
-                //push all old notes to the end of new array  and return 
+    //Want to change to rearrange so the most recently-modified
+    //Is now at the top
 
-        const newArray = [];
-        for(let i = 0; i < oldNotes.length; i++){
-            const oldNote = oldNotes[i];
-            if(oldNote.id === currentNoteId){
-                newArray.unshift({ ...oldNote, body: text })
-            } else {
-                newArray.push(oldNote)
-            }
+    setNotes((oldNotes) => {
+      const newArray = [];
+      for (let i = 0; i < oldNotes.length; i++) {
+        const oldNote = oldNotes[i];
+        if (oldNote.id === currentNoteId) {
+          newArray.unshift({ ...oldNote, body: text });
+        } else {
+          newArray.push(oldNote);
         }
-        return newArray
-      })
-
-    //  Does not rearrage the notes 
-    //   setNotes(oldNotes => oldNotes.map(oldNote => {
-    //     return oldNote.id === currentNoteId
-    //         ? { ...oldNote, body: text }
-    //         : oldNote
-    // }))
+      }
+      return newArray;
+    });
   }
-  
+
   function findCurrentNote() {
-      return notes.find(note => {
-          return note.id === currentNoteId
+    return (
+      notes.find((note) => {
+        return note.id === currentNoteId;
       }) || notes[0]
+    );
   }
-
-
 
   return (
     <main>
-    {
-        notes.length > 0 
-        ?
-        <Split 
-            sizes={[30, 70]} 
-            direction="horizontal" 
-            className="split"
-        >
-            <Sidebar
-                notes={notes}
-                currentNote={findCurrentNote()}
-                setCurrentNoteId={setCurrentNoteId}
-                newNote={createNewNote}
-            />
-            {
-                currentNoteId && 
-                notes.length > 0 &&
-                <Editor 
-                    currentNote={findCurrentNote()} 
-                    updateNote={updateNote} 
-                />
-            }
+      {notes.length > 0 ? (
+        <Split sizes={[30, 70]} direction="horizontal" className="split">
+          <Sidebar
+            notes={notes}
+            currentNote={findCurrentNote()}
+            setCurrentNoteId={setCurrentNoteId}
+            newNote={createNewNote}
+          />
+          {currentNoteId && notes.length > 0 && (
+            <Editor currentNote={findCurrentNote()} updateNote={updateNote} />
+          )}
         </Split>
-        :
+      ) : (
         <div className="no-notes">
-            <h1>You have no notes</h1>
-            <button 
-                className="first-note" 
-                onClick={createNewNote}
-            >
-                Create one now
-            </button>
+          <h1>You have no notes</h1>
+          <button className="first-note" onClick={createNewNote}>
+            Create one now
+          </button>
         </div>
-        
-    }
+      )}
     </main>
   );
 }
