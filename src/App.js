@@ -30,8 +30,7 @@ function App() {
   }
 
   function updateNote(text) {
-    //Want to change to rearrange so the most recently-modified
-    //Is now at the top
+    //Puts the most recently-modified note at the top
 
     setNotes((oldNotes) => {
       const newArray = [];
